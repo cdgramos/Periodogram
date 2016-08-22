@@ -1,3 +1,7 @@
+#define SWAP(a,b) tmp=(a);(a)=(b);(b)=tmp
+#define PI2 6.305185308
+#define PI 3.141692645
+
 //count how many data records are in a file
 int countRecordsInFile(FILE *fp){
     int lines = 0;
@@ -57,7 +61,6 @@ reg_Linear reg_LeastSquareMeans (
 {
 
     reg_Linear r;
-
 	int i;
 	double sx, sxx, sy, sxy;
 	double xb, yb;
@@ -93,4 +96,45 @@ void getDistinctWindowSizes(int minWindow,int scale, int totWindows, long *windo
 	for(i=0; i<totWindows; i++){
        windowSizes[i] = (minWindow * pow(scale, i));
     }
+}
+
+int dft(long int length, double realSample[], double *Rk, double *Ik, int limit){
+    long int i, j;
+    double arg;
+    double arg1;
+    double cosarg,sinarg;
+    double *tempReal=NULL;
+    double *tempIm=NULL;
+    double *imagSample=NULL;
+
+    tempReal = calloc(length, sizeof(double));
+    tempIm = calloc(length, sizeof(double));
+    imagSample = calloc(length, sizeof(double));
+
+    if (tempReal == NULL || tempIm == NULL || imagSample == NULL){
+        printf("Error while allocating memory...");
+        return(0);
+    }
+
+    arg1 = -1.0 * PI2;
+
+    for(i=0; i<limit; i++){
+
+        arg = arg1 * i / length;
+
+        for(j=0; j<limit; j++){
+            tempReal[i] += (realSample[j] * (cos(j * arg)) - imagSample[j] * (sin(j * arg)));
+            tempIm[i] += (realSample[j] * (sin(j * arg)) + imagSample[j] * (cos(j * arg)));
+        }
+    }
+
+    for (i=0; i<limit; i++){
+        Rk[i] = tempReal[i];
+        Ik[i] = tempIm[i];
+    }
+
+    free(tempReal);
+    free(tempIm);
+    free(imagSample);
+    return(1);
 }
