@@ -4,7 +4,7 @@
 #include "auxiliar.h"
 
 
-#define minValues 16 //mininum records to compute Higuchi Fractal Dimension Algorithm ! Impirical Value
+#define minValues 16 //mininum records to compute Periodogram Method ! Impirical Value
 
 
 int main(){
